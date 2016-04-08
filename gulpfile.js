@@ -64,7 +64,6 @@ gulp.task('js-to-header', function(){
 gulp.task('js-to-bottom', function(){
     return gulp.src([
         'bower_components/bootstrap/dist/js/bootstrap.min.js',
-        'bower_components/bootstrap-select/dist/js/bootstrap-select.min.js',
         'bower_components/three.js/build/three.min.js',
         '__sources/js/models/*.js',
         '__sources/js/app.js',
@@ -87,7 +86,6 @@ gulp.task('css', function(){
     gulp.src([
             'bower_components/angular/angular-csp.css',
             'bower_components/bootstrap/dist/css/bootstrap.min.css',
-            'bower_components/bootstrap-select/dist/css/bootstrap-select.css',
             '__source/styles/*.css'                                            //my styles
         ])
         //.pipe(gp_sourcemaps.init())
@@ -110,6 +108,7 @@ gulp.task('browser-sync', function() {
 
     gulp.watch('__sources/js/**/*.js',['js-to-header', 'js-to-bottom']).on('change', browserSync.reload);
     gulp.watch("index.html").on('change', browserSync.reload);
+    gulp.watch("templates/*.html").on('change', browserSync.reload);
 
 });
 

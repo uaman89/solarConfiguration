@@ -7,21 +7,21 @@
     <script src="js/header_script.min.js"></script>
 
 </head>
-<body  >
----------------
-<br>
-{{ message }}
-<br>
----------------
+<body>
 
-<div ng-app="solConfigApp" >
-    <div class="app-container" ng-controller="MainCtrl">
-        <div ng-repeat="configuration in configurations" class="row">
-            <configuration info="configuration"></configuration>
-        </div>
+<div ng-app="solConfigApp" ng-controller="MainCtrl">
+
+    <h2>{{ message }}</h2>
+
+    <div ng-repeat="configuration in configurations" >
+        {{ configuration.rows }} x {{ configuration.modulesCount }}
+
+        <configuration params="configuration" class="row"></configuration>
+        <hr>
+        <hr>
     </div>
-</div>
 
+</div>
 <script src="js/bottom_script.min.js"></script>
 
 </body>

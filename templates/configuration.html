@@ -1,3 +1,4 @@
+
 <div id="configurationX" class="row">
     <div class="col-md-4">
         <div class="panel-group">
@@ -35,25 +36,23 @@
             <tr>
                 <td>Конструкция:</td>
                 <td>
-                    <select class="selectpicker">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
+                    <select ng-model="configuration.rows" class="form-control">
+                        <option ng-repeat="option in configurationParamSet.systemType" value="{{option.rows}}">{{option.label}}</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>Тип системы:</td>
                 <td>
-                    <select ng-model="installationParams.systemType" class="selectpicker">
-                        <option ng-repeat="option in installationParamSets.systemType" value="{{option.rows}}">{{option.label}}</option>
+                    <select ng-model="configuration.rows" class="form-control">
+                        <option ng-repeat="option in configurationParamSet.systemType" value="{{option.rows}}">{{option.label}}</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td>Расположение модулей:</td>
                 <td>
-                    <select class="selectpicker">
+                    <select class="form-control">
                         <option>Mustard</option>
                         <option>Ketchup</option>
                         <option>Relish</option>
@@ -61,19 +60,19 @@
                 </td>
             </tr>
             <tr>
-                <td>Модулей в ряду:{{ instalationParams.modulesCount }}</td>
-                <td><input type="text" class="form-control" ng-model="installationParams.modulesCount"></td>
+                <td>Модулей в ряду:</td>
+                <td><input type="text" class="form-control" ng-model="configuration.modulesCount"></td>
             </tr>
             <tr>
                 <td>Количество модулей, шт.:</td>
-                <td><input type="text" class="form-control" disabled ng-model="installationParams.totalModulesCount"></td>
+                <td><input type="text" class="form-control" disabled ng-model="configuration.totalModulesCount"></td>
             </tr>
             <tr>
                 <td>Количество в ряду:</td>
                 <td class="input-group pull-right">
-                    <input type="text" class="form-control" ng-model="installationParams.moduleLength">
-                    <input type="text" class="form-control" ng-model="installationParams.moduleHeight">
-                    <input type="text" class="form-control" ng-model="installationParams.moduleWidth">
+                    <input type="text" class="form-control" ng-model="moduleLength">
+                    <input type="text" class="form-control" ng-model="moduleHeight">
+                    <input type="text" class="form-control" ng-model="moduleWidth">
                 </td>
             </tr>
             <tr>

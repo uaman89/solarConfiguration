@@ -1,9 +1,9 @@
-solConfigApp.directive('configurationInstance', function(){
+solConfigApp.directive('configuration', function(){
     return{
         restrict: 'E',
-        scope: {
-            configuration: '='
-        },
+        //scope: {
+        //    params: '='
+        //},
         templateUrl: 'templates/configuration.html'
     };
 });
