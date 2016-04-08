@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Solar-SPA</title>
+    <link rel="stylesheet" href="styles/main.min.css">
+    <script src="js/header_script.min.js"></script>
+
+</head>
+<body  >
+---------------
+<br>
+{{ message }}
+<br>
+---------------
+
+<div ng-app="solConfigApp" >
+    <div class="app-container" ng-controller="MainCtrl">
+        <div ng-repeat="configuration in configurations" class="row">
+            <configuration info="configuration"></configuration>
+        </div>
+    </div>
+</div>
+
+<script src="js/bottom_script.min.js"></script>
+
+</body>
+</html>
