@@ -1,5 +1,6 @@
 solConfigApp.controller('MainCtrl', function ($scope) {
 
+    $scope.test = [1,2,3];
     $scope.message = "under construction!";
 
     $scope.configurations = [
@@ -16,17 +17,17 @@ solConfigApp.controller('MainCtrl', function ($scope) {
             { id:2, label: 'двухопорная'},
         ],
 
-        moduleDispositin: [
+        moduleOrientation: [
             { id:1, label: 'вертикально' },
-            { id:2, label: 'горизонтально'},
+            { id:2, label: 'горизонтально' },
         ],
 
         systemType: [
             { rows:1, label: 'однорядная' },
-            { rows:2, label: 'двухрядная'},
-            { rows:3, label: 'трехрядная'},
-            { rows:4, label: 'четырехрядная'},
-            { rows:5, label: 'пятирядная'},
+            { rows:2, label: 'двухрядная' },
+            { rows:3, label: 'трехрядная' },
+            { rows:4, label: 'четырехрядная' },
+            { rows:5, label: 'пятирядная' },
         ]
 
     }

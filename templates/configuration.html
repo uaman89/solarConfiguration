@@ -1,5 +1,5 @@
 
-<div id="configurationX" class="row">
+<div id="configuration{{ configuration.id }}" class="row">
     <div class="col-md-4">
         <div class="panel-group">
             <div class="panel panel-info">
@@ -32,12 +32,12 @@
         </div>
     </div>
     <div class="col-md-8">
-        <table>
+        <table class="table-striped table-hover table-condensed">
             <tr>
                 <td>Конструкция:</td>
                 <td>
-                    <select ng-model="configuration.rows" class="form-control">
-                        <option ng-repeat="option in configurationParamSet.systemType" value="{{option.rows}}">{{option.label}}</option>
+                    <select ng-model="configuration.designType" class="form-control">
+                        <option ng-repeat="option in configurationParamSet.design" value="{{option.id}}">{{option.label}}</option>
                     </select>
                 </td>
             </tr>
@@ -52,11 +52,10 @@
             <tr>
                 <td>Расположение модулей:</td>
                 <td>
-                    <select class="form-control">
-                        <option>Mustard</option>
-                        <option>Ketchup</option>
-                        <option>Relish</option>
+                    <select ng-model="configuration.moduleOrientation" class="form-control">
+                        <option ng-repeat="option in configurationParamSet.moduleOrientation" value="{{option.id}}">{{option.label}}</option>
                     </select>
+
                 </td>
             </tr>
             <tr>

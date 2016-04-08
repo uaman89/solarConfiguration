@@ -65,11 +65,12 @@ gulp.task('js-to-bottom', function(){
     return gulp.src([
         'bower_components/bootstrap/dist/js/bootstrap.min.js',
         'bower_components/three.js/build/three.min.js',
+        //'__sources/js/**/*.js',
         '__sources/js/models/*.js',
         '__sources/js/app.js',
         '__sources/js/directives/*.js',
         '__sources/js/controllers/*.js',
-        '__sources/js/index.js',                  //my script
+        '__sources/js/index.js',
         ])
         //.pipe(gp_sourcemaps.init())
         .pipe(gp_concat('bottom_script.concat.js'))

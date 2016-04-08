@@ -22,7 +22,6 @@
     "jquery": "^2.2.3",
     "angular": "^1.5.3",
     "three.js": "threejs#*",
-    "bootstrap": "^3.3.6",
-    "bootstrap-select": "^1.10.0"
+    "bootstrap": "^3.3.6"
   }
 }

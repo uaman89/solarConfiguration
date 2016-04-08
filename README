@@ -1,0 +1,19 @@
+# You need installed Node.js
+
+# Also you need installed bower.
+# If you don't run: > npm -g install bower
+
+# You need have some experience with Gulp.
+
+# Install node_modules dependencies ( Gupl + gulp plugins ).
+> npm install
+
+# Install bower packages. We need this for production.
+> bower install
+
+# Run gulp task for build js & css files for production.
+> gulp
+
+# For "live-reload" browser use:
+> gulp browser-sync
+
