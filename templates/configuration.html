@@ -1,14 +1,17 @@
 
-<div id="configuration{{ configuration.id }}" class="row">
-    <div class="col-md-4">
+<div id="configuration{{ configuration.params.configurationId }}" class="row">
+
+    <div class="col-md-5">
         <div class="panel-group">
             <div class="panel panel-info">
                 <div class="panel-body">
-                    <canvas id="renderContainer"></canvas>
-                    <table class="preview-param-table">
+                    <div class="renderer-container">
+                        img must be here...
+                    </div>
+                    <table class="col-md-3">
                         <tr>
                             <td>H, мм</td>
-                            <td></td>
+                            <td>{{ configuration.params.configurationId }}</td>
                         </tr>
                         <tr>
                             <td>h, мм</td>
@@ -24,19 +27,19 @@
                         </tr>
                         <tr>
                             <td>&alpha;, град</td>
-                            <td></td>
+                            <td>{{ configuration.params.tableAngle }}</td>
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-7">
         <table class="table-striped table-hover table-condensed">
             <tr>
-                <td>Конструкция:</td>
-                <td>
-                    <select ng-model="configuration.designType" class="form-control">
+                <td class="col-md-4">Конструкция:</td>
+                <td class="col-md-3">
+                    <select ng-model="configuration.params.designType" class="form-control">
                         <option ng-repeat="option in configurationParamSet.design" value="{{option.id}}">{{option.label}}</option>
                     </select>
                 </td>
@@ -44,7 +47,7 @@
             <tr>
                 <td>Тип системы:</td>
                 <td>
-                    <select ng-model="configuration.rows" class="form-control">
+                    <select ng-model="configuration.params.rows" ng-change="configuration.painter.drawModel()" class="form-control">
                         <option ng-repeat="option in configurationParamSet.systemType" value="{{option.rows}}">{{option.label}}</option>
                     </select>
                 </td>
@@ -52,7 +55,7 @@
             <tr>
                 <td>Расположение модулей:</td>
                 <td>
-                    <select ng-model="configuration.moduleOrientation" class="form-control">
+                    <select ng-model="configuration.params.moduleOrientation" class="form-control">
                         <option ng-repeat="option in configurationParamSet.moduleOrientation" value="{{option.id}}">{{option.label}}</option>
                     </select>
 
@@ -60,23 +63,23 @@
             </tr>
             <tr>
                 <td>Модулей в ряду:</td>
-                <td><input type="text" class="form-control" ng-model="configuration.modulesCount"></td>
+                <td><input ng-model="configuration.params.modulesCount" ng-change="configuration.painter.drawModel()" type="text" class="form-control"></td>
             </tr>
             <tr>
                 <td>Количество модулей, шт.:</td>
-                <td><input type="text" class="form-control" disabled ng-model="configuration.totalModulesCount"></td>
+                <td><input type="text" class="form-control" disabled ng-model="configuration.params.totalModulesCount"></td>
             </tr>
             <tr>
-                <td>Количество в ряду:</td>
-                <td class="input-group pull-right">
-                    <input type="text" class="form-control" ng-model="moduleLength">
-                    <input type="text" class="form-control" ng-model="moduleHeight">
-                    <input type="text" class="form-control" ng-model="moduleWidth">
+                <td>Размеры модуля, мм:</td>
+                <td class="input-group pull-right module-sizes">
+                    <input ng-change="configuration.painter.drawModel()" ng-model="configuration.params.moduleHeight" type="text" class="form-control"><span>X</span>
+                    <input ng-change="configuration.painter.drawModel()" ng-model="configuration.params.moduleWidth" type="text" class="form-control"><span>X</span>
+                    <input ng-change="configuration.painter.drawModel()" ng-model="configuration.params.moduleDepth" type="text" class="form-control">
                 </td>
             </tr>
             <tr>
                 <td>Угол наклона:</td>
-                <td><input type="text" class="form-control"></td>
+                <td><input ng-model="configuration.params.tableAngle" ng-change="configuration.painter.drawModel()" type="text" class="form-control"></td>
             </tr>
             <tr>
                 <td>Количество опор, шт.:</td>

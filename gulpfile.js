@@ -65,12 +65,16 @@ gulp.task('js-to-bottom', function(){
     return gulp.src([
         'bower_components/bootstrap/dist/js/bootstrap.min.js',
         'bower_components/three.js/build/three.min.js',
-        //'__sources/js/**/*.js',
-        '__sources/js/models/*.js',
-        '__sources/js/app.js',
-        '__sources/js/directives/*.js',
-        '__sources/js/controllers/*.js',
-        '__sources/js/index.js',
+        'bower_components/three.js/examples/js/renderers/CanvasRenderer.js',
+        'bower_components/three.js/examples/js/renderers/Projector.js',
+        'bower_components/three.js/examples/js/controls/OrbitControls.js',
+        'bower_components/three.js/examples/js/Detector.js',
+        '__sources/js/**/*.js',
+        //'__sources/js/models/*.js',
+        //'__sources/js/app.js',
+        //'__sources/js/directives/*.js',
+        //'__sources/js/controllers/*.js',
+        //'__sources/js/index.js',
         ])
         //.pipe(gp_sourcemaps.init())
         .pipe(gp_concat('bottom_script.concat.js'))
@@ -83,11 +87,11 @@ gulp.task('js-to-bottom', function(){
 
 
 // CSS
-gulp.task('css', function(){
+gulp.task('build-css', function(){
     gulp.src([
             'bower_components/angular/angular-csp.css',
             'bower_components/bootstrap/dist/css/bootstrap.min.css',
-            '__source/styles/*.css'                                            //my styles
+            '__sources/styles/**/*.css'                                            //my styles
         ])
         //.pipe(gp_sourcemaps.init())
         .pipe(gp_concat('main.concat.css'))
@@ -107,11 +111,12 @@ gulp.task('browser-sync', function() {
         }
     });
 
-    gulp.watch('__sources/js/**/*.js',['js-to-header', 'js-to-bottom']).on('change', browserSync.reload);
+    gulp.watch( '__sources/js/**/*.js', ['js-to-bottom'] ).on('change', browserSync.reload);
+    gulp.watch( '__sources/styles/*.css', ['build-css'] ).on('change', browserSync.reload);
     gulp.watch("index.html").on('change', browserSync.reload);
     gulp.watch("templates/*.html").on('change', browserSync.reload);
 
 });
 
-gulp.task('default', ['js-to-header', 'js-to-bottom', 'css'], function(){});
+gulp.task('default', ['js-to-header', 'js-to-bottom', 'build-css'], function(){});
 

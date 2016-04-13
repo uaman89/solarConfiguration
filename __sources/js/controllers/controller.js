@@ -3,12 +3,8 @@ solConfigApp.controller('MainCtrl', function ($scope) {
     $scope.test = [1,2,3];
     $scope.message = "under construction!";
 
-    $scope.configurations = [
-
-        new ConfigurationParamsModel(),
-        new ConfigurationParamsModel(),
-
-    ];
+    $scope.configurations = new Array();
+    $scope.configurations.push( new ConfigurationModel() );
 
     $scope.configurationParamSet = {
 
@@ -30,6 +26,12 @@ solConfigApp.controller('MainCtrl', function ($scope) {
             { rows:5, label: 'пятирядная' },
         ]
 
+    };
+
+    $scope.addNewConfiguration = function(){
+        console.log('add!');
+        $scope.configurations.push( new ConfigurationModel() );
     }
+
 });
 //hello

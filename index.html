@@ -9,17 +9,19 @@
 </head>
 <body>
 
-<div ng-app="solConfigApp" ng-controller="MainCtrl">
+<div ng-app="solConfigApp" ng-controller="MainCtrl" class="container">
 
     <h2>{{ message }}</h2>
 
     <div ng-repeat="configuration in configurations" >
-        {{ configuration.rows }} x {{ configuration.modulesCount }}
+        <!--{{ configuration.designType }} x {{ configuration.moduleOrientation }}-->
 
         <configuration params="configuration" class="row"></configuration>
         <hr>
         <hr>
     </div>
+
+    <button ng-click="addNewConfiguration()">ADD NEW CONFIGURATION</button>
 
 </div>
 <script src="js/bottom_script.min.js"></script>

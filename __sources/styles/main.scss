@@ -1,0 +1,17 @@
+.module-sizes.input-group.pull-right{
+    input{
+        width: 30%;
+        //margin-right: 5%;
+
+        //&:last-child{
+        //    margin-right: 0;
+        //}
+    }
+
+    span{
+        width: 5%;
+        float: left;
+        text-align: center;
+        line-height: 34px;
+    }
+}
