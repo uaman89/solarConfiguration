@@ -20,7 +20,7 @@ var ConfigurationDrawModel =  function( paramsObj ){
 
     var spaceBetweenModules = 5;
 
-    var container, camera, texture, moduleMaterial, renderer, controls;
+    var container, camera, moduleTexture, moduleMaterial, renderer, controls;
 
     var configurationContainer, scene;
 
@@ -41,19 +41,31 @@ var ConfigurationDrawModel =  function( paramsObj ){
 
 
         // Load a texture, set wrap mode to repeat
-        texture = new THREE.TextureLoader().load("textures/solar-cell.png");
-        texture.wrapS = THREE.RepeatWrapping;
-        texture.wrapT = THREE.RepeatWrapping;
-        texture.repeat.set(5, 10);
+        moduleTexture = new THREE.TextureLoader().load("textures/solar-cell.png");
+        moduleTexture.wrapS = THREE.RepeatWrapping;
+        moduleTexture.wrapT = THREE.RepeatWrapping;
+        moduleTexture.repeat.set(5, 10);
 
 
-        moduleMaterial = new THREE.MeshBasicMaterial( {map: texture,  overdraw: true} );
+        // Load a texture, set wrap mode to repeat
+        groundTexture = new THREE.TextureLoader().load("textures/grass.jpg");
+        groundTexture.wrapS = THREE.RepeatWrapping;
+        groundTexture.wrapT = THREE.RepeatWrapping;
+        groundTexture.repeat.set(10, 10);
+
+
+        moduleMaterial = new THREE.MeshBasicMaterial( {map: moduleTexture,  overdraw: true} );
 
 
         configurationContainer = new THREE.Object3D();
 
         scene.add( configurationContainer );
-        console.log('scene',scene);
+
+        var ground = new THREE.Mesh( new THREE.PlaneGeometry( 50, 50, 1, 1), new THREE.MeshBasicMaterial({ map: groundTexture }) );
+        ground.rotation.x = -90 * Math.PI/180;
+        ground.position.y = -4;
+        scene.add( ground );
+
 
 
         renderer = Detector.webgl ? new THREE.WebGLRenderer({ alpha: true }) : new THREE.CanvasRenderer({ alpha: true });
@@ -113,7 +125,7 @@ var ConfigurationDrawModel =  function( paramsObj ){
             new THREE.MeshBasicMaterial({ color: 0xE0E0E0 })
         );
 
-        var moduleTopFace = new THREE.Mesh(new THREE.PlaneGeometry( moduleSize.width-0.05, moduleSize.height-0.05, 10, 10), new THREE.MeshBasicMaterial({ map: texture }) );
+        var moduleTopFace = new THREE.Mesh(new THREE.PlaneGeometry( moduleSize.width-0.05, moduleSize.height-0.05, 10, 10), new THREE.MeshBasicMaterial({ map: moduleTexture }) );
         moduleTopFace.position.z += moduleSize.depth;
 
 
@@ -121,7 +133,7 @@ var ConfigurationDrawModel =  function( paramsObj ){
         // end module
 
 
-        // generate the "table"
+        // generate the "table" begin:
         var arrModules = new Array();
         var offsetX = (params.modulesCount * moduleSize.width) / 2 - moduleSize.width/2;
         var offsetY = (params.rows * moduleSize.height) / 2 - moduleSize.height/2;
@@ -143,6 +155,7 @@ var ConfigurationDrawModel =  function( paramsObj ){
         modulesContainer.rotation.x = -params.tableAngle * Math.PI / 180;
 
         configurationContainer.add(modulesContainer);
+        //end generate the "table"
 
         console.log('draw module');
     };
