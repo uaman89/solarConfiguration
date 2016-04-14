@@ -55,8 +55,8 @@
             <tr>
                 <td>Расположение модулей:</td>
                 <td>
-                    <select ng-model="configuration.params.moduleOrientation" class="form-control">
-                        <option ng-repeat="option in configurationParamSet.moduleOrientation" value="{{option.id}}">{{option.label}}</option>
+                    <select ng-model="configuration.params.moduleOrientation"  ng-change="configuration.painter.drawModel()" class="form-control">
+                        <option ng-repeat="option in configurationParamSet.moduleOrientation" value="{{option.val}}">{{option.label}}</option>
                     </select>
 
                 </td>

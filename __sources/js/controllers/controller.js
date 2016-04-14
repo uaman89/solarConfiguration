@@ -14,8 +14,8 @@ solConfigApp.controller('MainCtrl', function ($scope) {
         ],
 
         moduleOrientation: [
-            { id:1, label: 'вертикально' },
-            { id:2, label: 'горизонтально' },
+            { val: 'vertical', label: 'вертикально' },
+            { val: 'horizontal', label: 'горизонтально' },
         ],
 
         systemType: [

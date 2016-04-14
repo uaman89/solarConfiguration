@@ -2,27 +2,11 @@ var ConfigurationDrawModel =  function( paramsObj ){
 
     var params = paramsObj;
 
-    var moduleSize = {
-        height: params.moduleHeight,
-        width: params.moduleWidth,
-        length: params.moduleLength,
-    };
+    var container, camera, moduleTexture, moduleMaterial, renderer, controls, scene;
 
-    var rows = params.rows, cols = params.modulesCount;
+    var configurationContainer;
 
 
-    var solPanelParams = {
-        height: null,
-        width: null,
-        isRotate: false,
-        rotateDirection: null
-    };
-
-    var spaceBetweenModules = 5;
-
-    var container, camera, moduleTexture, moduleMaterial, renderer, controls;
-
-    var configurationContainer, scene;
 
 // InitDrawModel begin:
 
@@ -61,19 +45,20 @@ var ConfigurationDrawModel =  function( paramsObj ){
 
         scene.add( configurationContainer );
 
+
         var ground = new THREE.Mesh( new THREE.PlaneGeometry( 50, 50, 1, 1), new THREE.MeshBasicMaterial({ map: groundTexture }) );
         ground.rotation.x = -90 * Math.PI/180;
         ground.position.y = -4;
         scene.add( ground );
 
 
-
         renderer = Detector.webgl ? new THREE.WebGLRenderer({ alpha: true }) : new THREE.CanvasRenderer({ alpha: true });
-        //renderer.antialias = true;
         renderer.setSize( containerWidth, containerHeight);
-        //renderer.setClearColor(0x00C0DC, 1);
+        renderer.antialias = true;
+        //renderer.setClearColor(0x00C0DC, 1); //fill bg with color
 
 
+        //mouse control in 3 lines :) awesome!
         controls = new THREE.OrbitControls( camera, container[0] );
         controls.addEventListener( 'change', this.drawModel );
 
@@ -97,12 +82,11 @@ var ConfigurationDrawModel =  function( paramsObj ){
         //camera.lookAt(solarPanel.position);
 
         //renderer = new THREE.CanvasRenderer({ alpha: true });
-
-
-
-
     };
+
 //--- end Init ----------------------------------------------------------------------------------------------------------------------------
+
+
 
     this.drawModel = function(){
 
@@ -114,11 +98,18 @@ var ConfigurationDrawModel =  function( paramsObj ){
         // module begin:
         var module = new THREE.Object3D();
 
-        moduleSize = {
+        var moduleSize = {
             height: params.moduleHeight / 1000,
             width: params.moduleWidth / 1000,
             depth: params.moduleDepth / 1000,
         };
+
+        //change module orientation
+        if (params.moduleOrientation == 'horizontal'){
+            var temp = moduleSize.height;
+            moduleSize.height = moduleSize.width;
+            moduleSize.width = temp;
+        }
 
         var moduleBase = new THREE.Mesh(
             new THREE.BoxGeometry( moduleSize.width, moduleSize.height, moduleSize.depth, 1,1,1 ),
@@ -126,7 +117,7 @@ var ConfigurationDrawModel =  function( paramsObj ){
         );
 
         var moduleTopFace = new THREE.Mesh(new THREE.PlaneGeometry( moduleSize.width-0.05, moduleSize.height-0.05, 10, 10), new THREE.MeshBasicMaterial({ map: moduleTexture }) );
-        moduleTopFace.position.z += moduleSize.depth;
+        moduleTopFace.position.z += moduleSize.depth - moduleSize.depth/2+0.001;
 
 
         module.add(moduleBase, moduleTopFace);
@@ -159,10 +150,10 @@ var ConfigurationDrawModel =  function( paramsObj ){
 
         console.log('draw module');
     };
-
+//--- end drawModel --------------------------------------------------------------------------------------------------------------------------------------------
 
 };
-//--- end ConfigurationDrawModel() -----------------------------------------------------------------------------------------------------------
+//--- end ConfigurationDrawModel() -----------------------------------------------------------------------------------------------------------------------------
 
 
 /*
