@@ -5,7 +5,9 @@ var ConfigurationModel = function(){
     this.params = new ConfigurationParamsModel( configurationId );
     this.painter = new ConfigurationDrawModel( this.params );
 
-    addEventListener("configurationBlockAdded", this.painter.init );
-    //this.painter.drawModel();
+    this.update = function(){
+        this.params.calculateData();
+        this.painter.drawModel();
+    };
 
 };

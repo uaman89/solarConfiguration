@@ -5,11 +5,9 @@ solConfigApp.directive('configuration', function(){
         link: function(scope, elem, attrs){
             var initDiretcive = function(){
                 scope.configuration.painter.init();
-                scope.configuration.painter.drawModel();
-                console.log('here3');
+                scope.configuration.update();
+                console.log('init the Configuration');
             }
-
-            console.log('here2');
             setTimeout( initDiretcive, 0 ); //to init after directive HTML complete render
         },
 
