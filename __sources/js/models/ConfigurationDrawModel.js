@@ -7,7 +7,7 @@ var ConfigurationDrawModel =  function( paramsObj ){
         controls,
         light, renderer,  scene;
 
-    var configurationContainer;
+    var configurationContainer, supportBar, supportBarWidth;
 
     var _this = this;
 
@@ -90,6 +90,12 @@ var ConfigurationDrawModel =  function( paramsObj ){
         configurationContainer = new THREE.Object3D();
         configurationContainer.castShadow = true;
 
+        //"base" for supports
+        supportBar = new THREE.Mesh(
+            new THREE.BoxGeometry(),
+            supportMaterial
+        );
+
         scene.add( configurationContainer );
 
 
@@ -149,12 +155,13 @@ var ConfigurationDrawModel =  function( paramsObj ){
 
         var tableHeight = params.tableHeight / 1000;
         var tableWidth = params.tableWidth / 1000;
+        var distanceToGround = params.distanceToGround / 1000;
 
-        // clear children:
+        // clear old configuration model:
         configurationContainer.children = [];
 
-
         var modulesContainer = new THREE.Object3D();
+        var supportsContainer = new THREE.Object3D();
 
 
         // module begin:
@@ -163,7 +170,7 @@ var ConfigurationDrawModel =  function( paramsObj ){
         var moduleSize = {
             height: params.moduleHeight / 1000,
             width: params.moduleWidth / 1000,
-            depth: params.moduleDepth / 1000,
+            depth: params.moduleDepth / 1000
         };
 
         //change module orientation
@@ -173,7 +180,6 @@ var ConfigurationDrawModel =  function( paramsObj ){
         else{
             moduleTexture.repeat.set(5, 10);
         }
-        console.log('params.moduleOrientation',params.moduleOrientation);
 
         var moduleBase = new THREE.Mesh(
             new THREE.BoxGeometry( moduleSize.width, moduleSize.height, moduleSize.depth, 1,1,1 ),
@@ -192,18 +198,13 @@ var ConfigurationDrawModel =  function( paramsObj ){
 
 
         //рельса, на которой лежит ряд модулей
-        var tableFrameBarWidth = 40/1000;
-        var tableFrameBar = new THREE.Mesh(
-            new THREE.BoxGeometry( tableWidth, tableFrameBarWidth, tableFrameBarWidth, 1,1,1 ),
-            supportMaterial
-        );
+        supportBarWidth = params.supports.width/1000;
+
         var tableFrameBarPositionOffset = moduleSize.height*0.3; //30% of height from center  [ 20% | < 30% * 30% > | 20% ]
         //end: рельса, на которой лежит ряд модулей
 
 
         // generate the "table" begin:
-        var arrModules = new Array();
-        var arrTableFrameBars = new Object();
 
         // модули добавляем в "контейнер".
         // при добавлении в контейнер, середина модуля == середине контейнера, поєтому сдвинем каждай модуль влево на половину ширины, и вверх на половину высоту.
@@ -215,113 +216,118 @@ var ConfigurationDrawModel =  function( paramsObj ){
         //                                                                                                                    |_|_|_|_|_|_|_|
         //по вертикали "нулевая точка" будет в самом низу: так удобнее - относительно нее будет поворачиваться столешница     |_|_|_|*|_|_|_|
         var offsetY = moduleSize.height/2;
+        var moduleInterval = params.r/1000;
+
+        var longSupportBar = supportBar.clone();
+        longSupportBar.geometry = new THREE.BoxGeometry(tableWidth, supportBarWidth, supportBarWidth, 1,1,1);
 
         for ( var row = 0; row < params.rows; row++ ){
-            arrModules[ row ] = new Array();
             for ( var col = 0; col <  params.modulesCount; col++ ){
-                arrModules[ row ][ col ] = module.clone();
+                var moduleClone = module.clone();
 
-                arrModules[ row ][ col ].position.x = col * moduleSize.width;
-                arrModules[ row ][ col ].position.x += offsetX; //move it left for half of table width
-                
-                arrModules[ row ][ col ].position.y = row * moduleSize.height;
-                arrModules[ row ][ col ].position.y += offsetY;
-                modulesContainer.add( arrModules[ row ][ col ] );
+                moduleClone.position.x = col * (moduleSize.width + moduleInterval);
+                moduleClone.position.x += offsetX; //move it left for half of table width
+
+                moduleClone.position.y = row * (moduleSize.height + moduleInterval);
+                moduleClone.position.y += offsetY;
+
+                modulesContainer.add( moduleClone );
             }
 
-
             //add "frame bars"
-            arrTableFrameBars[ row ] = new Array();
             for ( var index = 0; index<2; index++ ) {
                 var barOffsetY = ( index == 0 ) ? -tableFrameBarPositionOffset : tableFrameBarPositionOffset;
                 barOffsetY = ( barOffsetY + moduleSize.height/2 ) + (moduleSize.height * row); //вот тут я уже сам запутался
-                arrTableFrameBars[ row ][ index ] = tableFrameBar.clone();
-                arrTableFrameBars[ row ][ index ].position.set( 0, barOffsetY, -moduleSize.depth );
-                modulesContainer.add( arrTableFrameBars[ row ][ index ] );
+
+                var bar = longSupportBar.clone();
+                bar.position.set( 0, barOffsetY, -moduleSize.depth );
+                modulesContainer.add( bar );
             }
 
         }//end for
 
 
         //add left & right frame bars begin:
-        arrTableFrameBars['sideBars'] = new Array();
-        var xPos = -tableWidth / 2 + tableFrameBarWidth;
+        var xPos = -tableWidth / 2 + supportBarWidth/2;
         var yPos = tableHeight / 2;
+
+        var sideSupportBar = supportBar.clone();
+        sideSupportBar.geometry = new THREE.BoxGeometry(supportBarWidth, tableHeight, supportBarWidth);
+
         for ( var index = 0; index<2; index++ ) {
-            arrTableFrameBars['sideBars'][index] = tableFrameBar.clone();
-            arrTableFrameBars['sideBars'][index].geometry = new THREE.BoxGeometry(tableFrameBarWidth, tableHeight, tableFrameBarWidth);
+            var sideSupport = sideSupportBar.clone();
             xPos = (index==0) ?  xPos : -xPos;
-            arrTableFrameBars['sideBars'][index].position.set( xPos, yPos, -moduleSize.depth);
-            modulesContainer.add( arrTableFrameBars['sideBars'][index] );
+            sideSupport.position.set( xPos, yPos, -moduleSize.depth);
+            modulesContainer.add( sideSupport );
         }
         //end add left & right frame bars
 
 
 
         //move table up above the ground
-        modulesContainer.position.set( 0, params.distanceToGround / 1000, 0 );
+        modulesContainer.position.set( 0, distanceToGround, 0 );
 
-        modulesContainer.rotation.x = -params.tableAngle * Math.PI / 180;
+        //rotate for angle which was set by user
+        //     +90* <- | -> -90*   ... / <- (-60) == (30)
+        modulesContainer.rotation.x = ( -90 + parseInt(params.tableAngle) ) * Math.PI / 180;
 
         configurationContainer.add(modulesContainer);
         //end generate the "table"
 
 
         //draw supports begin:
-        var supWidth = 40;
+        var supportOffset = 0;
+
+        var frontSupportHeight = distanceToGround;
+        var frontSupportOffsetY = frontSupportHeight/2;
+
+        var backSupportHeight  = params.H/1000 - params.supports.width/2/1000;
+        var backSupportOffsetY = backSupportHeight/2;
+        var backSupportOffsetZ = -params.B/1000 + supportBarWidth/2;
+
+        var offsetX = -tableWidth/2 + supportBarWidth/2;
 
 
+        var frontSupport = supportBar.clone();
+        frontSupport.geometry = new THREE.BoxGeometry(supportBarWidth, frontSupportHeight, supportBarWidth);
+
+        var backSupport = supportBar.clone();
+        backSupport.geometry = new THREE.BoxGeometry(supportBarWidth, backSupportHeight, supportBarWidth);
+
+        for ( var i=0; i < params.supports.count; i++ ){
+            var xPos = (params.supports.interval/1000 * i) + offsetX;
+
+            //front supports
+            var frontSupportClone = frontSupport.clone();
+            frontSupportClone.position.set( xPos, frontSupportOffsetY, -supportBarWidth );
+            supportsContainer.add(frontSupportClone);
+
+            //back supports
+            var backSupportClone = backSupport.clone();
+            backSupportClone.position.set( xPos, backSupportOffsetY, backSupportOffsetZ );
+            supportsContainer.add(backSupportClone);
+        }
+
+        configurationContainer.add( supportsContainer );
         //end draw supports
 
-        console.log('draw module');
+        console.log('drawModel');
     };
 //--- end drawModel --------------------------------------------------------------------------------------------------------------------------------------------
 
+
+    this.centerCamera = function(){
+        controls.target = new THREE.Vector3(
+            configurationContainer.position.x,
+            configurationContainer.position.y + params.H/2/1000,
+            configurationContainer.position.z
+        );
+        camera.position.y = params.H/2/1000 + 1;
+        camera.position.z = configurationContainer.position.z + 5;
+    }
+//--- end centerCamera() --------------------------------------------------------------------------------------------------------------------------------------------
+
+
 };
-//--- end ConfigurationDrawModel() -----------------------------------------------------------------------------------------------------------------------------
 
-
-/*
- //solPanelSupports
- supportBarMaterial = new THREE.MeshBasicMaterial({color: 0xE0, overdraw: true});
-
- var supportBarRows = 2;
- var supportBarPerRow = 4;
- var suppBarWidth = 10;
- spaceBetweenSupportsX = solPanelParams.width / ( supportBarPerRow - 1 ) - suppBarWidth;
- spaceBetweenSupportsZ = solPanelParams.height - suppBarWidth  - 20;
-
- var suppBarHeight ;
- for (r=0; r < supportBarRows; r++) {
- for (c = 0; c < supportBarPerRow; c++) {
- suppBarHeight = ( r < 1 ) ? 170 : 70;
- var supportBar = new THREE.Mesh(new THREE.CubeGeometry(suppBarWidth, suppBarHeight, suppBarWidth, 4, 4, 4), supportBarMaterial);
-
- supportBar.position.x = (c * spaceBetweenSupportsX) - solPanelParams.halfWidth;
- //shiftFirst for correct position
- if (c==0) supportBar.position.x += suppBarWidth;
-
- supportBar.position.z = (r * spaceBetweenSupportsZ) - solPanelParams.halfHeight;
- if (r==0) supportBar.position.z += suppBarWidth;
-
- supportBar.position.y += suppBarHeight/2;
- solarPanel.add(supportBar);
- }
- }
- */
-
-
-/*
-
- // Plane
- planeMaterial = new THREE.MeshBasicMaterial({color: 0x7a7a7a, overdraw: true});
- //        planeMaterial.polygonOffset = true;
- //        planeMaterial.polygonOffsetFactor = -0.1;
- //planeMaterial.opacity = 0.5;
- //planeMaterial.overdraw = false;
-
- plane = new THREE.Mesh(new THREE.PlaneGeometry(solPanelParams.width, solPanelParams.height, 10, 10), planeMaterial);
- plane.rotation.x = -90 * ( Math.PI / 180 );
- //plane.overdraw = true;
- solarPanel.add(plane);
-* */
+//end file

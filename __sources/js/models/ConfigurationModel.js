@@ -6,8 +6,11 @@ var ConfigurationModel = function(){
     this.painter = new ConfigurationDrawModel( this.params );
 
     this.update = function(){
+        console.log('calc');
         this.params.calculateData();
         this.painter.drawModel();
+        this.painter.centerCamera();
+
     };
 
 };
